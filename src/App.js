@@ -11,24 +11,28 @@ class App extends Component {
     super();
     this.state = {
       showNote: false,
-      notes:[]
+      notes: [],
+      note: {}
     };
   }
 
   toggleNote = () => {
     this.setState({
-      showNote: ! this.state.showNote
+      showNote: !this.state.showNote
     });
   }
 
   getNotes = () => {
     axios.get(urlFor('notes'))
     .then((res) => this.setState({ notes: res.data }) )
-    .catch((err) => console.log(err.response.data) );    
+    .catch((err) => console.log(err.response.data) );
+
   }
 
-  getNote = () => {
-    console.log('Clicked!');  
+  getNote = (id) => {
+    axios.get(urlFor(`notes/${id}`))
+    .then((res) => this.setState({ note: res.data, showNote: true }) )
+    .catch((err) => console.log(err.response.data) );
   }
 
   render() {
@@ -37,7 +41,7 @@ class App extends Component {
     return (
       <div className="App">
         <Nav toggleNote={this.toggleNote} showNote={showNote} />
-        { showNote ?
+        {showNote ?
           <Note />
           :
           <List
